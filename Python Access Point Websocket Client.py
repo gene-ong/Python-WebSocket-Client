@@ -10,7 +10,7 @@ with mss.mss() as sct:
     monitor = {"top": 40, "left": 0, "width": 1000, "height": 400}
     ws = websocket.WebSocket()
     ws.connect("ws://192.168.4.1/")
-     
+    #ws.connect("ws://192.168.1.117/test")
         
     while "Screen capturing":
        
