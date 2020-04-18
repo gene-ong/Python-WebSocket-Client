@@ -9,8 +9,9 @@ with mss.mss() as sct:
     
     monitor = {"top": 40, "left": 0, "width": 1000, "height": 400}
     ws = websocket.WebSocket()
+    #first line if using local WiFi, second line if using ESP32 as an Access Point
+    #ws.connect("ws://192.168.1.102/test")
     ws.connect("ws://192.168.4.1/")
-    #ws.connect("ws://192.168.1.117/test")
         
     while "Screen capturing":
        
@@ -34,7 +35,7 @@ with mss.mss() as sct:
         resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
 
         resized_new = numpy.empty_like(resized)
- 
+        #if m = 0, first pixel is on RHS, if m = 1, first pixel is on LHS
         m = 1
         while m<height:
             n = 0 
