@@ -55,7 +55,7 @@ def sendFrame():
         # Press "q" to quit
         if cv2.waitKey(25) & 0xFF == ord("q"):
            cv2.destroyAllWindows()
-        print('sent binary chunk')
+        #print('sent binary chunk')
            
 with mss.mss() as sct:
     
@@ -66,10 +66,11 @@ with mss.mss() as sct:
     
         
     
-        
+    ws.connect("ws://192.168.4.1/")    
     while True:
-        ws.connect("ws://192.168.4.1/")
+        
         sendFrame()
-        ws.close()
-        #sleep(0.01)
-        print("Just slept")
+        
+        sleep(0.00)
+        #print("Just slept")
+    ws.close()
