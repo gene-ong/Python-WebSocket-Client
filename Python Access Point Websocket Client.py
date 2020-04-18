@@ -4,17 +4,11 @@ import cv2
 import mss
 import numpy
 import websocket
+import threading
+from time import sleep
 
-with mss.mss() as sct:
-    
-    monitor = {"top": 40, "left": 0, "width": 1000, "height": 400}
-    ws = websocket.WebSocket()
-    #first line if using local WiFi, second line if using ESP32 as an Access Point
-    #ws.connect("ws://192.168.1.102/test")
-    ws.connect("ws://192.168.4.1/")
-        
-    while "Screen capturing":
-       
+
+def sendFrame():
         #ws.connect("ws://192.168.1.102/test")
         #last_time = time.time()
         
@@ -61,4 +55,21 @@ with mss.mss() as sct:
         # Press "q" to quit
         if cv2.waitKey(25) & 0xFF == ord("q"):
            cv2.destroyAllWindows()
-        #ws.close()
+        print('sent binary chunk')
+           
+with mss.mss() as sct:
+    
+    monitor = {"top": 300, "left": 300, "width": 1000, "height": 400}
+    ws = websocket.WebSocket()
+    #first line if using local WiFi, second line if using ESP32 as an Access Point
+    #ws.connect("ws://192.168.1.102/test")
+    
+        
+    
+        
+    while True:
+        ws.connect("ws://192.168.4.1/")
+        sendFrame()
+        ws.close()
+        #sleep(0.01)
+        print("Just slept")
