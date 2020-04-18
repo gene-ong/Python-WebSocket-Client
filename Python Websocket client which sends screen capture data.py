@@ -41,33 +41,65 @@ with mss.mss() as sct:
     monitor = {"top": 40, "left": 0, "width": 800, "height": 640}
 
     ws = websocket.WebSocket()
-    ws.connect("ws://192.168.1.102/test")
+    
 
     while "Screen capturing":
        
-        last_time = time.time()
-
+        
+        #last_time = time.time()
+        ws.connect("ws://192.168.1.102/test")
         # Get raw pixels from the screen, save it to a Numpy array
         # Numpy Array structure: [Height, Width, BLUE, GREEN, RED, ??] 
         img = numpy.array(sct.grab(monitor))
         # print('Original Dimensions : ',img.shape)
 
         #parameters of new image
-        width = 10
         height = 8
+        width = 10
         dim = (width, height)
-
-        #resizing original image
+    
+        # resizing original image
         resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
-        # print('Resized Dimensions: ',resized.shape)
-
-        #Change one pixel for testing
+        #print('Resized Dimensions: ',resized.shape)
+        # Resized Dimensions:  (8, 10, 4)
+        # Change one pixel for testing
         #img[320,400] = [255,255,255,0]
 
-        # Display the picture
-        cv2.imshow("OpenCV/Numpy normal", img)
-        #cv2.imshow("OpenCV/Numpy normal", resized)
+        # Display the original picture
+        # cv2.imshow("OpenCV/Numpy normal", img)
 
+
+        #Changing resized based on layout of pixels
+        #every second row needs to be inverted
+        resized_new = numpy.empty_like(resized)
+ 
+        m = 1
+        print('***new frame')
+        while m<height:
+            n = 0 
+            while n<width:
+                resized_new[m,n] = resized[m, 9-n]
+                n += 1
+            m += 2
+
+        
+        # Display the resized picture
+        #cv2.imshow("OpenCV/Numpy normal", resized)
+        chunk = ''
+        i = 0
+        while i < height:
+            y = 0
+            while y < width:
+                r = 0
+                while r < 3:
+                    # print(chr(resized[i,y,r]))
+                    chunk += chr(resized_new[i,y,r])
+                    r += 1
+                y += 1
+            i += 1
+
+        
+        # print(chunk)
         #checking out parameters of image from screen capture
         #print(type(img))
         #print(img.shape)
@@ -80,8 +112,8 @@ with mss.mss() as sct:
         # print("fps: {}".format(1 / (time.time() - last_time)))
 
         # Press "q" to quit
-        if cv2.waitKey(25) & 0xFF == ord("q"):
-           cv2.destroyAllWindows()
+        #if cv2.waitKey(25) & 0xFF == ord("q"):
+        #   cv2.destroyAllWindows()
         
         #send resized image over socket
         # print(' BGR Values Sent in decimal :',resized[0,0,0],resized[0,0,1],resized[0,0,2] )
@@ -90,18 +122,20 @@ with mss.mss() as sct:
         #output = 1
         #ws.send('123456')
         
-        blue = int(resized[0,0,0])
-        ws.send_binary(chr(blue))
+        #blue = int(resized[0,0,0])
+        #ws.send_binary(chr(blue))
         # print(resized[0,0,0])
 
-        ws.send_binary(chr(resized[0,0,1]))
+        # ws.send_binary(chr(resized[0,0,1]))
         # print(resized[0,0,1])
 
-        ws.send_binary(chr(resized[0,0,2]))
+        # ws.send_binary(chr(resized[0,0,2]))
         # print(resized[0,0,2])
+        # ws.send("ABC")
+        ws.send_binary(chunk)
+        ws.close()
+    
         
-        # ws.send(resized)
-        
-    ws.close()
+    
 
     
