@@ -37,7 +37,7 @@ def sendFrame():
                 resized_new[m,n] = resized[m, 9-n]
                 n += 1
             m += 2
-
+        #create a string called chunk with all the pixels of the resized numpy array
         chunk = ''
         i = 0
         while i < height:
@@ -50,7 +50,7 @@ def sendFrame():
                 y += 1
             i += 1
 
-        
+        # Send Binary values over websocket
         ws.send_binary(chunk)
         # Press "q" to quit
         if cv2.waitKey(25) & 0xFF == ord("q"):
@@ -62,15 +62,16 @@ with mss.mss() as sct:
     monitor = {"top": 300, "left": 300, "width": 1000, "height": 400}
     ws = websocket.WebSocket()
     #first line if using local WiFi, second line if using ESP32 as an Access Point
-    #ws.connect("ws://192.168.1.102/test")
-    
-        
-    
-    ws.connect("ws://192.168.4.1/")    
+    ws.connect("ws://192.168.1.102/test")
+    #ws.connect("ws://192.168.4.1/")    
     while True:
         
+        #i = 0
+        #while i <=75:
+        #print(i)
         sendFrame()
-        
+        #i +=1
         sleep(0.00)
-        #print("Just slept")
+        #print("1")        
     ws.close()
+    print("ws.close")
