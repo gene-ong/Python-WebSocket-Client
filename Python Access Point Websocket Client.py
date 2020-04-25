@@ -62,16 +62,26 @@ with mss.mss() as sct:
     monitor = {"top": 300, "left": 300, "width": 1000, "height": 400}
     ws = websocket.WebSocket()
     #first line if using local WiFi, second line if using ESP32 as an Access Point
-    ws.connect("ws://192.168.1.102/test")
-    #ws.connect("ws://192.168.4.1/")    
+    #ws.connect("ws://192.168.1.102/test")
+    ws.connect("ws://192.168.4.1/")    
     while True:
         
         #i = 0
         #while i <=75:
         #print(i)
-        sendFrame()
+        try:
+            sendFrame()
         #i +=1
-        sleep(0.00)
-        #print("1")        
+            sleep(0.00)
+        #print("1")
+        except:
+            try:
+                ws.connect("ws://192.168.4.1/")           
+            except:
+                try:
+                    ws = websocket.WebSocket()
+                except:
+                    ws = websocket.WebSocket()
+                    ws.connect("ws://192.168.4.1/")
     ws.close()
     print("ws.close")
