@@ -6,7 +6,32 @@ import numpy
 import websocket
 import threading
 from time import sleep
+from pynput.mouse import Listener
 
+startx = 0
+starty = 0
+finx = 0
+finy = 0
+
+def on_click(x, y, button, pressed):
+    global startx
+    global starty
+    global finx
+    global finy
+    if pressed:
+        
+        startx = x
+        starty = y
+        print(startx)
+        print(starty)
+        
+    print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)))
+
+    if not pressed:
+        finx = x
+        finy = y
+        # Stop listener
+        return False
 
 def sendFrame():
         #ws.connect("ws://192.168.1.102/test")
@@ -56,10 +81,15 @@ def sendFrame():
         if cv2.waitKey(25) & 0xFF == ord("q"):
            cv2.destroyAllWindows()
         #print('sent binary chunk')
-           
-with mss.mss() as sct:
+
+# Collect events until released
+with Listener(
+        on_click=on_click) as listener:
+    listener.join()
     
-    monitor = {"top": 300, "left": 300, "width": 1000, "height": 400}
+with mss.mss() as sct:
+   # Part of the screen to capture
+    monitor = {"top": startx, "left": starty, "width": abs((startx - finx)), "height": abs((starty - finy))}
     ws = websocket.WebSocket()
     #first line if using local WiFi, second line if using ESP32 as an Access Point
     #ws.connect("ws://192.168.1.102/test")
