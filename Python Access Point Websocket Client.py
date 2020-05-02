@@ -12,6 +12,7 @@ startx = 0
 starty = 0
 finx = 0
 finy = 0
+print('Select an area of the screen with your mouse. Click and hold the LEFT mouse button, dragging the cursor over the area you wish to display')
 
 def on_click(x, y, button, pressed):
     global startx
@@ -25,7 +26,7 @@ def on_click(x, y, button, pressed):
         print(startx)
         print(starty)
         
-    print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)))
+    #print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)))
 
     if not pressed:
         finx = x
@@ -52,7 +53,7 @@ def sendFrame():
     
         # resizing original image
         resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
-
+        #resized = cv2.resize(img, dim, interpolation =cv2.inter)
         resized_new = numpy.empty_like(resized)
         #if m = 0, first pixel is on RHS, if m = 1, first pixel is on LHS
         m = 1
@@ -89,7 +90,8 @@ with Listener(
     
 with mss.mss() as sct:
    # Part of the screen to capture
-    print(startx, starty, abs((startx - finx)), abs((starty - finy)))
+    #print(startx, starty, abs((startx - finx)), abs((starty - finy)))
+    print('Screen capturing successfully started')
     monitor = {"top": starty, "left": startx, "width": abs((startx - finx)), "height": abs((starty - finy))}
     #monitor = {"top": 400, "left": 0, "width": 400, "height": 400}
     ws = websocket.WebSocket()
