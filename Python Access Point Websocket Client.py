@@ -89,7 +89,9 @@ with Listener(
     
 with mss.mss() as sct:
    # Part of the screen to capture
-    monitor = {"top": startx, "left": starty, "width": abs((startx - finx)), "height": abs((starty - finy))}
+    print(startx, starty, abs((startx - finx)), abs((starty - finy)))
+    monitor = {"top": starty, "left": startx, "width": abs((startx - finx)), "height": abs((starty - finy))}
+    #monitor = {"top": 400, "left": 0, "width": 400, "height": 400}
     ws = websocket.WebSocket()
     #first line if using local WiFi, second line if using ESP32 as an Access Point
     #ws.connect("ws://192.168.1.102/test")
