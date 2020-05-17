@@ -19,6 +19,11 @@ nbOfLEDsRow = int(input('Define the number of LEDs in each row '))
 
 LEDMatrixConfig = int(input('How is the matrix configured? 1 = LEDs snake from row to row, 2 = LEDs all start on same side'))
 startingPosition = int(input('Where is the first LED? 1 = TOP LEFT, 2 = TOP RIGHT, 3 = BOTTOM LEFT, 4 = BOTTOM RIGHT '))
+#parameters of new image
+height = nbOfLEDsCol
+width = nbOfLEDsRow
+dim = (width, height)
+
 print('This display has ', nbOfLEDsCol*nbOfLEDsRow, ' LEDs')
 
 print('Select an area of the screen with your mouse. Click and hold the LEFT mouse button, dragging the cursor over the area you wish to display')
@@ -59,9 +64,6 @@ def on_click(x, y, button, pressed):
         return False
 
 def sendFrame():
-        #ws.connect("ws://192.168.1.102/test")
-        #last_time = time.time()
-        
         # Get raw pixels from the screen, save it to a Numpy array
         # Numpy Array structure: [Height, Width, BLUE, GREEN, RED, ??] 
         img = numpy.array(sct.grab(monitor))
@@ -69,12 +71,6 @@ def sendFrame():
 
         # Display the picture
         #cv2.imshow("Selected Screen", img)
-        
-        #parameters of new image
-        height = nbOfLEDsCol
-        width = nbOfLEDsRow
-        dim = (width, height)
-    
         # resizing original image
         resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
         #resized = cv2.resize(img, dim, interpolation =cv2.inter)
@@ -131,7 +127,7 @@ def sendFrame():
         ws.send_binary(chunk)
         logging.warning('is when this event was logged.')
         # Press "q" to quit
-        if cv2.waitKey(25) & 0xFF == ord("q"):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
            cv2.destroyAllWindows()
         #print('sent binary chunk')
 
@@ -158,7 +154,6 @@ with mss.mss() as sct:
         try:
             sendFrame()
         #i +=1
-            sleep(0.00)
         #print("1")
         except:
             try:
