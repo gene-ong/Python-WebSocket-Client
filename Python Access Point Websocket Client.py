@@ -7,8 +7,8 @@ import websocket
 import threading
 from time import sleep
 from pynput.mouse import Listener
-import logging
-logging.basicConfig(format='%(asctime)s %(message)s')
+#import logging
+#logging.basicConfig(format='%(asctime)s %(message)s')
 
 startx = 0
 starty = 0
@@ -125,7 +125,7 @@ def sendFrame():
 
         # Send Binary values over websocket
         ws.send_binary(chunk)
-        logging.warning('is when this event was logged.')
+        #logging.warning('is when this event was logged.')
         # Press "q" to quit
         if cv2.waitKey(1) & 0xFF == ord("q"):
            cv2.destroyAllWindows()
