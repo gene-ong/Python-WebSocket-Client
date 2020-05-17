@@ -23,14 +23,29 @@ def on_click(x, y, button, pressed):
         
         startx = x
         starty = y
-        print(startx)
-        print(starty)
+        print('first click startx = ', startx)
+        print('first click starty = ', starty)
+
         
     #print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)))
 
     if not pressed:
-        finx = x
-        finy = y
+        print('released click finx = ', x)
+        print('released click finy = ', y)
+        if startx < x:
+            finx = x
+        else:
+            finx = startx
+            startx = x
+        if starty < y:
+            finy = y
+        else:
+            finy = starty
+            starty = y
+        print('startx = ',startx)
+        print('finx = ',finx)
+        print('starty = ',starty)
+        print('finy = ',finy)
         # Stop listener
         return False
 

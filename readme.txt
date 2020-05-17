@@ -6,5 +6,4 @@ Pyinstaller -w -F -i [icon file location] [you_python_file]
 -I  adds icon association to .exe, file must be a .ico (find some http://goo.gl/EfpGDo)
 
 ToDO:
-- fix mouse drag to work with both up and down directions, left or right?
 - update to work with 1664 pixel matrix
