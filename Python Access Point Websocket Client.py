@@ -12,6 +12,13 @@ startx = 0
 starty = 0
 finx = 0
 finy = 0
+nbOfLEDsCol = int(input('Define the number of LEDs in each column '))
+nbOfLEDsRow = int(input('Define the number of LEDs in each row '))
+
+LEDMatrixConfig = int(input('How is the matrix configured? 1 = LEDs snake from row to row, 2 = LEDs all start on same side'))
+startingPosition = int(input('Where is the first LED? 1 = TOP LEFT, 2 = TOP RIGHT, 3 = BOTTOM LEFT, 4 = BOTTOM RIGHT '))
+print('This display has ', nbOfLEDsCol*nbOfLEDsRow, ' LEDs')
+
 print('Select an area of the screen with your mouse. Click and hold the LEFT mouse button, dragging the cursor over the area you wish to display')
 
 def on_click(x, y, button, pressed):
@@ -62,22 +69,53 @@ def sendFrame():
         #cv2.imshow("Selected Screen", img)
         
         #parameters of new image
-        height = 8
-        width = 10
+        height = nbOfLEDsCol
+        width = nbOfLEDsRow
         dim = (width, height)
     
         # resizing original image
         resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
         #resized = cv2.resize(img, dim, interpolation =cv2.inter)
         resized_new = numpy.empty_like(resized)
+
+            
         #if m = 0, first pixel is on RHS, if m = 1, first pixel is on LHS
-        m = 1
+        
+        m = 0
         while m<height:
-            n = 0 
+            n = 0                     
             while n<width:
-                resized_new[m,n] = resized[m, 9-n]
+                if LEDMatrixConfig == 1:
+                    if startingPosition == 1:
+                        if (m % 2) != 0:
+                            resized_new[m,n] = resized[m, (width -1)-n]
+                    elif startingPosition == 2:
+                        if (m % 2) == 0:
+                            resized_new[m,n] = resized[m, (width -1)-n]
+                    elif startingPosition == 3:
+                        if (m % 2) != 0:
+                            resized_new[m,n] = resized[(height-1) - m, (width -1)-n]
+                        else:
+                            resized_new[m,n] = resized[(height-1) - m, n]
+                    elif startingPosition == 4:
+                        if (m % 2) == 0:
+                            resized_new[m,n] = resized[(height-1) - m, (width -1)-n]
+                        else:
+                            resized_new[m,n] = resized[(height-1) - m, n]
+
+                elif LEDMatrixConfig == 2:
+                    if startingPosition == 1:
+                        resized_new[m,n] = resized[m, n]
+                    elif startingPosition == 2:
+                        resized_new[m,n] = resized[m, (width -1)-n]
+                    elif startingPosition == 3:
+                        resized_new[m,n] = resized[(height-1) - m, n]
+                    elif startingPosition == 4:
+                        resized_new[m,n] = resized[(height-1) - m, (width -1)-n]
                 n += 1
-            m += 2
+            m += 1
+        
+                         
         #create a string called chunk with all the pixels of the resized numpy array
         chunk = ''
         i = 0
