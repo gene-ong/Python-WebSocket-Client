@@ -7,6 +7,8 @@ import websocket
 import threading
 from time import sleep
 from pynput.mouse import Listener
+import logging
+logging.basicConfig(format='%(asctime)s %(message)s')
 
 startx = 0
 starty = 0
@@ -77,7 +79,9 @@ def sendFrame():
         resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
         #resized = cv2.resize(img, dim, interpolation =cv2.inter)
         resized_new = numpy.empty_like(resized)
-
+                       
+        #create a string called chunk with all the pixels of the resized numpy array
+        chunk = ''
             
         #if m = 0, first pixel is on RHS, if m = 1, first pixel is on LHS
         
@@ -85,6 +89,7 @@ def sendFrame():
         while m<height:
             n = 0                     
             while n<width:
+                
                 if LEDMatrixConfig == 1:
                     if startingPosition == 1:
                         if (m % 2) != 0:
@@ -112,25 +117,19 @@ def sendFrame():
                         resized_new[m,n] = resized[(height-1) - m, n]
                     elif startingPosition == 4:
                         resized_new[m,n] = resized[(height-1) - m, (width -1)-n]
+                r = 0
+                while r < 3:
+                    chunk += chr(resized_new[m,n,r])
+                    r += 1
                 n += 1
             m += 1
         
-                         
-        #create a string called chunk with all the pixels of the resized numpy array
-        chunk = ''
-        i = 0
-        while i < height:
-            y = 0
-            while y < width:
-                r = 0
-                while r < 3:
-                    chunk += chr(resized_new[i,y,r])
-                    r += 1
-                y += 1
-            i += 1
+  
+
 
         # Send Binary values over websocket
         ws.send_binary(chunk)
+        logging.warning('is when this event was logged.')
         # Press "q" to quit
         if cv2.waitKey(25) & 0xFF == ord("q"):
            cv2.destroyAllWindows()
