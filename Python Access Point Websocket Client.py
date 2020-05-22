@@ -19,6 +19,10 @@ nbOfLEDsRow = int(input('Define the number of LEDs in each row '))
 
 LEDMatrixConfig = int(input('How is the matrix configured? 1 = LEDs snake from row to row, 2 = LEDs all start on same side'))
 startingPosition = int(input('Where is the first LED? 1 = TOP LEFT, 2 = TOP RIGHT, 3 = BOTTOM LEFT, 4 = BOTTOM RIGHT '))
+setBrightness = int(input('Set Brightness between -255 and +255 '))
+setContrast = int(input('Set Contrast between -127 and +127 '))
+
+
 #parameters of new image
 height = nbOfLEDsCol
 width = nbOfLEDsRow
@@ -27,6 +31,31 @@ dim = (width, height)
 print('This display has ', nbOfLEDsCol*nbOfLEDsRow, ' LEDs')
 
 print('Select an area of the screen with your mouse. Click and hold the LEFT mouse button, dragging the cursor over the area you wish to display')
+
+def apply_brightness_contrast(input_img, brightness = 0, contrast = 0):
+
+    if brightness != 0:
+        if brightness > 0:
+            shadow = brightness
+            highlight = 255
+        else:
+            shadow = 0
+            highlight = 255 + brightness
+        alpha_b = (highlight - shadow)/255
+        gamma_b = shadow
+
+        buf = cv2.addWeighted(input_img, alpha_b, input_img, 0, gamma_b)
+    else:
+        buf = input_img.copy()
+
+    if contrast != 0:
+        f = 131*(contrast + 127)/(127*(131-contrast))
+        alpha_c = f
+        gamma_c = 127*(1-f)
+
+        buf = cv2.addWeighted(buf, alpha_c, buf, 0, gamma_c)
+
+    return buf
 
 def on_click(x, y, button, pressed):
     global startx
@@ -67,10 +96,11 @@ def sendFrame():
         # Get raw pixels from the screen, save it to a Numpy array
         # Numpy Array structure: [Height, Width, BLUE, GREEN, RED, ??] 
         img = numpy.array(sct.grab(monitor))
+        adjustedImg = apply_brightness_contrast(img,setBrightness,setContrast)
         # print('Original Dimensions : ',img.shape)
 
         # Display the picture
-        #cv2.imshow("Selected Screen", img)
+        cv2.imshow("Selected Screen", img)
         # resizing original image
         resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
         #resized = cv2.resize(img, dim, interpolation =cv2.inter)
