@@ -22,6 +22,15 @@ startingPosition = int(input('Where is the first LED? 1 = TOP LEFT, 2 = TOP RIGH
 setBrightness = int(input('Set Brightness between -255 and +255 '))
 setContrast = int(input('Set Contrast between -127 and +127 '))
 
+##nbOfLEDsCol = 64
+##nbOfLEDsRow = 26
+##
+##LEDMatrixConfig = 1
+##startingPosition = 3
+##setBrightness = int(input('Set Brightness between -255 and +255 '))
+##setContrast = int(input('Set Contrast between -127 and +127 '))
+
+
 
 #parameters of new image
 height = nbOfLEDsCol
@@ -100,9 +109,9 @@ def sendFrame():
         # print('Original Dimensions : ',img.shape)
 
         # Display the picture
-        cv2.imshow("Selected Screen", img)
+        #cv2.imshow("Selected Screen", img)
         # resizing original image
-        resized = cv2.resize(img, dim, interpolation =cv2.INTER_AREA)
+        resized = cv2.resize(adjustedImg, dim, interpolation =cv2.INTER_AREA)
         #resized = cv2.resize(img, dim, interpolation =cv2.inter)
         resized_new = numpy.empty_like(resized)
                        
@@ -170,7 +179,13 @@ with mss.mss() as sct:
    # Part of the screen to capture
     #print(startx, starty, abs((startx - finx)), abs((starty - finy)))
     print('Screen capturing successfully started')
+
+    #Use this for UI Mouse Selection
     monitor = {"top": starty, "left": startx, "width": abs((startx - finx)), "height": abs((starty - finy))}
+
+    #For testing, set screen capture area around the size of the UTS Tower
+    #monitor = {"top": 10, "left": 600, "width": 590, "height": 700}
+
     #monitor = {"top": 400, "left": 0, "width": 400, "height": 400}
     ws = websocket.WebSocket()
     #first line if using local WiFi, second line if using ESP32 as an Access Point
