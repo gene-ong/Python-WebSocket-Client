@@ -22,13 +22,13 @@ startingPosition = int(input('Where is the first LED? 1 = TOP LEFT, 2 = TOP RIGH
 setBrightness = int(input('Set Brightness between -255 and +255 '))
 setContrast = int(input('Set Contrast between -127 and +127 '))
 
-##nbOfLEDsCol = 64
-##nbOfLEDsRow = 26
+#nbOfLEDsCol = 8
+#nbOfLEDsRow = 10
 ##
-##LEDMatrixConfig = 1
-##startingPosition = 3
-##setBrightness = int(input('Set Brightness between -255 and +255 '))
-##setContrast = int(input('Set Contrast between -127 and +127 '))
+#LEDMatrixConfig = 1
+#startingPosition = 1
+#setBrightness = 0
+#setContrast = 0
 
 
 
@@ -75,15 +75,15 @@ def on_click(x, y, button, pressed):
         
         startx = x
         starty = y
-        print('first click startx = ', startx)
-        print('first click starty = ', starty)
+        #print('first click startx = ', startx)
+        #print('first click starty = ', starty)
 
         
     #print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)))
 
     if not pressed:
-        print('released click finx = ', x)
-        print('released click finy = ', y)
+        #print('released click finx = ', x)
+        #print('released click finy = ', y)
         if startx < x:
             finx = x
         else:
